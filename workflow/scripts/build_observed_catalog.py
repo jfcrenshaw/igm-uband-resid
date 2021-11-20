@@ -2,6 +2,11 @@ import numpy as np
 import pandas as pd
 from rail.creation.degradation import LSSTErrorModel, QuantityCut
 
+import lya_forest
+
+lyaf = lya_forest.LyAForestExtinction()
+
+
 # get values injected to global by snakemake
 # pylint: disable=undefined-variable
 input_file = snakemake.input[1]

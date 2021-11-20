@@ -9,7 +9,8 @@ configfile: default_config
 
 # set the names of outputs
 #model_dir = f"models/{config['lgsm']['model_name']}"
-observed_catalog = f"catalogs/processed/{config['catalog']['name']}.pkl"
+truth_catalog = "data/raw/Euclid_trim_27p10_3p5_IR_4NUV.dat"
+observed_catalog = f"data/processed/{config['catalog']['name']}.pkl"
 results_dir = f"results/{config['run_name']}"
 #figures = {
 #    name: f"{results_dir}/{name}.{settings['format']}" 
@@ -28,11 +29,25 @@ config_flagger = ConfigFlagger(config, full_config)
 onstart:
     save_config(config, full_config, default_config)
 
+rule all:
+    input:
+        truth_catalog,
+        observed_catalog,
+
+
+rule download_truth_catalog:
+    output:
+        "data/raw/{truth_catalog}"
+    shell: 
+        "wget https://github.com/jfcrenshaw/igm-uband-resid/releases/download/"
+        "truth_catalog/{wildcards.truth_catalog} ;"
+        "mv {wildcards.truth_catalog} data/raw/{wildcards.truth_catalog}"
+
 
 rule build_observed_catalog:
     input:
         config_flagger.flag("catalog"),
-        "catalogs/raw/Euclid_trim_27p10_3p5_IR_4NUV.dat"
+        truth_catalog,
     output:
         observed_catalog,
     script:
