@@ -1,0 +1,39 @@
+from config_control import ConfigFlagger, save_config
+
+# the default config
+# you can specify a new config by running
+# python -m snakemake -c1 --configfile config/new_config.yaml
+# keys/values missing from the new config will be pulled from the default config
+default_config = "config/default_config.yaml"
+configfile: default_config
+
+# set the names of outputs
+#model_dir = f"models/{config['lgsm']['model_name']}"
+observed_catalog = f"catalogs/processed/{config['catalog']['name']}.pkl"
+results_dir = f"results/{config['run_name']}"
+#figures = {
+#    name: f"{results_dir}/{name}.{settings['format']}" 
+#    for name, settings in config["plotting"].items()
+#    if name != "rcParams"
+#}
+
+
+# set path to the full config to be checked against and then saved
+full_config = f"{results_dir}/full_config.yaml"
+# set up the config flagger
+config_flagger = ConfigFlagger(config, full_config)
+
+
+# save the current config
+onstart:
+    save_config(config, full_config, default_config)
+
+
+rule build_observed_catalog:
+    input:
+        config_flagger.flag("catalog"),
+        "catalogs/raw/Euclid_trim_27p10_3p5_IR_4NUV.dat"
+    output:
+        observed_catalog,
+    script:
+        "scripts/build_observed_catalog.py"

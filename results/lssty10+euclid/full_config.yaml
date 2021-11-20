@@ -1,0 +1,99 @@
+run_name: lssty10+euclid
+catalog:
+  name: lssty10+euclid
+  lya_extinction:
+    seed: 42
+    z_min: 1.63
+    z_max: 2.36
+    gamma: 2.7
+    NHI_min: 12.5
+    NHI_max: 17
+    beta: -1.46
+    b_mu: 30
+    b_sig: 12
+    b_min: 24
+    b_max: 1000
+    N_bs: 100000
+    N_clouds: null
+  error_model:
+    magLim: 30.0
+    ndFlag: 99
+    highSNR: false
+    seed: 0
+    lsst:
+      tvis: 30.0
+      nYrObs: 10.0
+      nVisYr:
+        u: 5.6
+        g: 8.0
+        r: 18.4
+        i: 18.4
+        z: 16.0
+        y: 16.0
+      gamma:
+        u: 0.038
+        g: 0.039
+        r: 0.039
+        i: 0.039
+        z: 0.039
+        y: 0.039
+      airmass: 1.2
+      extendedSource: 0.0
+      sigmaSys: 0.005
+      Cm:
+        u: 23.09
+        g: 24.42
+        r: 24.44
+        i: 24.32
+        z: 24.16
+        y: 23.73
+      msky:
+        u: 22.99
+        g: 22.26
+        r: 21.2
+        i: 20.48
+        z: 19.6
+        y: 18.61
+      theta:
+        u: 0.81
+        g: 0.77
+        r: 0.73
+        i: 0.71
+        z: 0.69
+        y: 0.68
+      km:
+        u: 0.491
+        g: 0.213
+        r: 0.126
+        i: 0.096
+        z: 0.069
+        y: 0.17
+    euclid:
+      bandNames:
+        ey: ey
+        j: j
+        h: h
+      nYrObs: 1.0
+      nVisYr:
+        ey: 1.0
+        j: 1.0
+        h: 1.0
+      m5:
+        ey: 24.0
+        j: 24.2
+        h: 23.9
+      gamma:
+        ey: 0.04
+        j: 0.04
+        h: 0.04
+      sigmaSys: 0.005
+  SNR_cuts:
+    u: 1.0
+    g: 1.0
+    r: 1.0
+    i: 5.0
+    z: 1.0
+    y: 1.0
+    ey: 1.0
+    j: 1.0
+    h: 1.0
