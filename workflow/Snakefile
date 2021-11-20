@@ -10,13 +10,14 @@ configfile: default_config
 # set the names of outputs
 #model_dir = f"models/{config['lgsm']['model_name']}"
 truth_catalog = "data/raw/Euclid_trim_27p10_3p5_IR_4NUV.dat"
-observed_catalog = f"data/processed/{config['catalog']['name']}.pkl"
+train_catalog = f"data/processed/{config['catalog']['name']}.pkl"
+test_catalog = f"data/processed/{config['catalog']['name']}_Lya.pkl"
 results_dir = f"results/{config['run_name']}"
-#figures = {
-#    name: f"{results_dir}/{name}.{settings['format']}" 
-#    for name, settings in config["plotting"].items()
-#    if name != "rcParams"
-#}
+figures = {
+    name: f"{results_dir}/{name}.{settings['format']}" 
+    for name, settings in config["plotting"].items()
+    if name != "rcParams"
+}
 
 
 # set path to the full config to be checked against and then saved
@@ -32,7 +33,9 @@ onstart:
 rule all:
     input:
         truth_catalog,
-        observed_catalog,
+        train_catalog,
+        test_catalog,
+        list(figures.values()),
 
 
 rule download_truth_catalog:
@@ -46,9 +49,23 @@ rule download_truth_catalog:
 
 rule build_observed_catalog:
     input:
-        config_flagger.flag("catalog"),
         truth_catalog,
     output:
-        observed_catalog,
+        train_catalog,
+        test_catalog,
     script:
         "scripts/build_observed_catalog.py"
+
+
+rule plot_lya_forest:
+    output:
+        figures["forest_spectra"],
+        figures["W_vs_NHI"],
+        figures["du_tau_hist"],
+    script:
+        "scripts/plot_lya_forest.py"
+
+
+# rule train_ensembles:
+# rule redshift_cuts:
+# rule fit_optical_depths:

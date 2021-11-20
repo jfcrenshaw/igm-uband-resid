@@ -8,21 +8,22 @@ run_name: lssty10+euclid # str
 # -------------------------
 catalog:
   name: lssty10+euclid
+  N_train: 200_000 # number of galaxies set aside for training the ensembles
 
   # lyman alpha extinction in u band
   lya_extinction:
-    seed: 42
+    seed: 0
     z_min: 1.63
     z_max: 2.36
     gamma: 2.7
-    NHI_min: 12.5
-    NHI_max: 17
+    logNHI_min: 12.5
+    logNHI_max: 17
     beta: -1.46
     b_mu: 30
     b_sig: 12
     b_min: 24
     b_max: 1000
-    N_bs: 100000
+    N_bs: 100_000
     N_clouds: null
 
   # photometric errors
@@ -31,7 +32,7 @@ catalog:
     magLim: 30.0 # dimmest magnitude allowed; dimmer mags set to ndFlag
     ndFlag: 99 # flag for non-detections
     highSNR: False
-    seed: 0
+    seed: 42
 
     # params for LSST errors
     lsst:
@@ -115,3 +116,19 @@ catalog:
     ey: 1.0
     j: 1.0
     h: 1.0
+
+# ----------------------
+# settings for plotting
+# ----------------------
+plotting:
+  rcParams:
+    font.size: 10
+    axes.titlesize: 10
+    axes.labelsize: 10
+
+  forest_spectra:
+    format: pdf
+  W_vs_NHI:
+    format: png
+  du_tau_hist:
+    format: pdf

@@ -1,13 +1,14 @@
 run_name: lssty10+euclid
 catalog:
   name: lssty10+euclid
+  N_train: 200000
   lya_extinction:
-    seed: 42
+    seed: 0
     z_min: 1.63
     z_max: 2.36
     gamma: 2.7
-    NHI_min: 12.5
-    NHI_max: 17
+    logNHI_min: 12.5
+    logNHI_max: 17
     beta: -1.46
     b_mu: 30
     b_sig: 12
@@ -19,7 +20,7 @@ catalog:
     magLim: 30.0
     ndFlag: 99
     highSNR: false
-    seed: 0
+    seed: 42
     lsst:
       tvis: 30.0
       nYrObs: 10.0
@@ -97,3 +98,14 @@ catalog:
     ey: 1.0
     j: 1.0
     h: 1.0
+plotting:
+  rcParams:
+    font.size: 10
+    axes.titlesize: 10
+    axes.labelsize: 10
+  forest_spectra:
+    format: pdf
+  W_vs_NHI:
+    format: png
+  du_tau_hist:
+    format: pdf

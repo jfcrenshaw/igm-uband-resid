@@ -288,7 +288,7 @@ class LyAForestExtinction(Degrader):
             u_decr = -2.5 * np.log10(1 - (eqWs * (1 + zs) * Rs).sum())
 
             # calculate effective optical depth in the u band
-            tau_eff = u_decr * np.log(10) / 2.5
+            tau_u = u_decr * np.log(10) / 2.5
 
             # save info about line of sight
             lines_of_sight[idx] = {
@@ -298,7 +298,7 @@ class LyAForestExtinction(Degrader):
                 "z": zs,
                 "eqW": eqWs,
                 "u_decr": u_decr,
-                "tau_eff": tau_eff,
+                "tau_u": tau_u,
             }
 
         return lines_of_sight
