@@ -1,3 +1,5 @@
+import pickle
+
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
@@ -6,24 +8,23 @@ import lya_forest
 
 # get values injected to global by snakemake
 # pylint: disable=undefined-variable
-forest_spectra = snakemake.output[0]
-W_vs_NHI = snakemake.output[1]
-du_tau_hist = snakemake.output[2]
+los_file = snakemake.input[0]
+forest_spectra = snakemake.output[-3]
+W_vs_NHI = snakemake.output[-2]
+du_tau_hist = snakemake.output[-1]
 config = snakemake.config
 # pylint: enable=undefined-variable
 
 # update the rcParams
 plt.rcParams.update(config["plotting"]["rcParams"])
 
+# load the lines of sight
+with open(los_file, "rb") as file:
+    lines_of_sight = pickle.load(file)
+
 # create the Lyman-alpha Forest degrader
 lya_config = config["catalog"]["lya_extinction"]
-del lya_config["seed"]
-
 lya = lya_forest.LyAForestExtinction(**lya_config)
-
-# simulate 10,000 lines of sight
-lines_of_sight = lya._simulate_lines_of_sight(range(10_000), 0)
-
 
 # ------------------------------------
 # Plots of Lyman-alpha Forest Spectra

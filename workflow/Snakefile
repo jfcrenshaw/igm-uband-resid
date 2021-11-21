@@ -8,11 +8,18 @@ default_config = "config/default_config.yaml"
 configfile: default_config
 
 # set the names of outputs
-#model_dir = f"models/{config['lgsm']['model_name']}"
 truth_catalog = "data/raw/Euclid_trim_27p10_3p5_IR_4NUV.dat"
-train_catalog = f"data/processed/{config['catalog']['name']}.pkl"
-test_catalog = f"data/processed/{config['catalog']['name']}_Lya.pkl"
-results_dir = f"results/{config['run_name']}"
+lines_of_sight = f"data/processed/{config['catalog']['name']}_Lya_lines_of_sight.pkl"
+observed_catalog = f"data/processed/{config['catalog']['name']}_Lya.pkl"
+ensembles = [
+    f"models/{config['catalog']['name']}_trained_on_lsst.pkl",
+    f"models/{config['catalog']['name']}_trained_on_lsst+euclid.pkl",
+]
+training_losses = [
+    f"models/losses/{config['catalog']['name']}_trained_on_lsst_losses.pkl",
+    f"models/losses/{config['catalog']['name']}_trained_on_lsst+euclid_losses.pkl",
+]
+results_dir = f"results/{config['catalog']['name']}"
 figures = {
     name: f"{results_dir}/{name}.{settings['format']}" 
     for name, settings in config["plotting"].items()
@@ -33,8 +40,10 @@ onstart:
 rule all:
     input:
         truth_catalog,
-        train_catalog,
-        test_catalog,
+        lines_of_sight,
+        observed_catalog,
+        ensembles,
+        training_losses,
         list(figures.values()),
 
 
@@ -49,15 +58,22 @@ rule download_truth_catalog:
 
 rule build_observed_catalog:
     input:
+        config_flagger.flag("catalog"),
         truth_catalog,
     output:
-        train_catalog,
-        test_catalog,
+        lines_of_sight,
+        observed_catalog,
     script:
         "scripts/build_observed_catalog.py"
 
 
 rule plot_lya_forest:
+    input:
+        config_flagger.flag("plotting", "rcParams"),
+        config_flagger.flag("plotting", "forest_spectra"),
+        config_flagger.flag("plotting", "W_vs_NHI"),
+        config_flagger.flag("plotting", "du_tau_hist"),
+        lines_of_sight,
     output:
         figures["forest_spectra"],
         figures["W_vs_NHI"],
@@ -66,6 +82,16 @@ rule plot_lya_forest:
         "scripts/plot_lya_forest.py"
 
 
-# rule train_ensembles:
+rule train_ensembles:
+    input:
+        config_flagger.flag("ensembles"),
+        observed_catalog
+    output:
+        ensembles,
+        training_losses,
+    script:
+        "scripts/train_ensembles.py"
+
+# rule plot_training_losses
 # rule redshift_cuts:
 # rule fit_optical_depths:

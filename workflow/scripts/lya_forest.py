@@ -303,10 +303,10 @@ class LyAForestExtinction(Degrader):
 
         return lines_of_sight
 
-    def __call__(self, data: pd.DataFrame, seed: int = None) -> pd.DataFrame:
-
-        # simulate lines of sight
-        lines_of_sight = self._simulate_lines_of_sight(data.index, seed)
+    @staticmethod
+    def _apply_uband_decrements(
+        data: pd.DataFrame, lines_of_sight: dict
+    ) -> pd.DataFrame:
 
         # pull out u band decrements
         u_decrs = [los["u_decr"] for los in lines_of_sight.values()]
@@ -316,3 +316,13 @@ class LyAForestExtinction(Degrader):
         obsData["u"] = obsData["u"] + np.array(u_decrs)
 
         return obsData
+
+    def __call__(self, data: pd.DataFrame, seed: int = None) -> pd.DataFrame:
+
+        # simulate lines of sight
+        lines_of_sight = self._simulate_lines_of_sight(data.index, seed)
+
+        # apply uband decrements
+        data = self._apply_uband_decrements(data, lines_of_sight)
+
+        return data

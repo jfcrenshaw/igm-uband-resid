@@ -1,18 +1,11 @@
-# Name for this run. Except for processed catalogs, which are saved in
-# catalogs/processed, and trained models, which are saved in models,
-# all the results will be saved in results/run_name
-run_name: lssty10+euclid # str
-
+--- # -------------------------
 # -------------------------
 # settings for the catalog
-# -------------------------
 catalog:
   name: lssty10+euclid
-  N_train: 200_000 # number of galaxies set aside for training the ensembles
 
   # lyman alpha extinction in u band
   lya_extinction:
-    seed: 0
     z_min: 1.63
     z_max: 2.36
     gamma: 2.7
@@ -24,65 +17,13 @@ catalog:
     b_min: 24
     b_max: 1000
     N_bs: 100_000
-    N_clouds: null
+    N_clouds: null # null = None, which means the default value is used
 
   # photometric errors
   error_model: # error model from https://arxiv.org/abs/0805.2366
-    # params shared by both telescopes
-    magLim: 30.0 # dimmest magnitude allowed; dimmer mags set to ndFlag
-    ndFlag: 99 # flag for non-detections
-    highSNR: False
-    seed: 42
-
     # params for LSST errors
     lsst:
-      tvis: 30.0 # exposure time for single visit in seconds
       nYrObs: 10.0 # number of years of observations
-      nVisYr: # mean number of visits per year in each filter
-        u: 5.6
-        g: 8.0
-        r: 18.4
-        i: 18.4
-        z: 16.0
-        y: 16.0
-      gamma: # band dependent error parameter
-        u: 0.038
-        g: 0.039
-        r: 0.039
-        i: 0.039
-        z: 0.039
-        y: 0.039
-      airmass: 1.2 # fiducial airmass
-      extendedSource: 0.0 # constant added to m5 for extended sources
-      sigmaSys: 0.005 # expected irreducible error
-      Cm: # band dependent parameter
-        u: 23.09
-        g: 24.42
-        r: 24.44
-        i: 24.32
-        z: 24.16
-        y: 23.73
-      msky: # median zenith sky brightness at Cerro Pachon
-        u: 22.99
-        g: 22.26
-        r: 21.20
-        i: 20.48
-        z: 19.60
-        y: 18.61
-      theta: # median zenith seeing FWHM, arcseconds
-        u: 0.81
-        g: 0.77
-        r: 0.73
-        i: 0.71
-        z: 0.69
-        y: 0.68
-      km: # atmospheric extinction (T2)
-        u: 0.491
-        g: 0.213
-        r: 0.126
-        i: 0.096
-        z: 0.069
-        y: 0.170
 
     # params for Euclid errors
     euclid:
@@ -116,6 +57,14 @@ catalog:
     ey: 1.0
     j: 1.0
     h: 1.0
+
+# ---------------------------
+# settings for the ensembles
+# ---------------------------
+ensembles:
+  N_train: 100_000 # number of galaxies in the training set
+  N_test: 20_000 # number of galaxies in the test set
+  N_flows: 10 # number of flows per ensemble
 
 # ----------------------
 # settings for plotting
